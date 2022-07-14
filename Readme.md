@@ -1,11 +1,11 @@
 # Url encoder for SVG
 
-http://yoksel.github.io/url-encoder
+https://webcolmeia.github.io/svgtourl/
 
 ## Usage
 
 1. Take `svg`.
-2. Encode it with [url-encoder](http://yoksel.github.io/url-encoder/).
+2. Encode it with [url-encoder](https://webcolmeia.github.io/svgtourl/).
 3. Use code as `background-image` or `border-image` or `mask`.
 4. Enjoy!
 
