@@ -22,7 +22,7 @@
         methods: {
             openMenu(e){
                 e.preventDefault();
-                const Toast = Swal.mixin({
+                const Toast = this.$swal.mixin({
                     toast: true,
                     position: 'top-end',
                     showConfirmButton: false,

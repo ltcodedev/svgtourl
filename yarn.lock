@@ -184,7 +184,7 @@
   dependencies:
     "@parcel/plugin" "2.6.2"
 
-"@parcel/config-default@2.6.2":
+"@parcel/config-default@2.6.2", "@parcel/config-default@^2.6.2":
   version "2.6.2"
   resolved "https://registry.yarnpkg.com/@parcel/config-default/-/config-default-2.6.2.tgz#0a1af0ce9a431771851c05fc821da13c8d878b7e"
   integrity sha512-kuZFY0rhaioCRX2LqxaMM2ylui6ms/nmdVxuceP4/SAWi/9duc+y1lG2a1zGNShbc6OEgpdQr/W/jxdYM7NJDw==
@@ -869,6 +869,11 @@
   dependencies:
     "@vue/compiler-dom" "3.2.37"
     "@vue/shared" "3.2.37"
+
+"@vue/devtools-api@^6.1.4":
+  version "6.2.1"
+  resolved "https://registry.yarnpkg.com/@vue/devtools-api/-/devtools-api-6.2.1.tgz#6f2948ff002ec46df01420dfeff91de16c5b4092"
+  integrity sha512-OEgAMeQXvCoJ+1x8WyQuVZzFo0wcyCmUR3baRVLmKBo1LmYZWMlRiXlux5jd0fqVJu6PfDbOrZItVqUEzLobeQ==
 
 "@vue/reactivity-transform@3.2.37":
   version "3.2.37"
@@ -1994,7 +1999,7 @@ svgo@^2.4.0:
     picocolors "^1.0.0"
     stable "^0.1.8"
 
-sweetalert2@^11.4.22:
+sweetalert2@11.x:
   version "11.4.22"
   resolved "https://registry.yarnpkg.com/sweetalert2/-/sweetalert2-11.4.22.tgz#255618eb7c5a4add513605dd01a3b31a257b9df8"
   integrity sha512-gDBdi/RrU8/+1IPITQyqx4E5vvXt/VdFfaXa0EevJ2teyY/+yJhUb/EQ/yi07It0XZdl3LebeffWGETXWq5fow==
@@ -2070,6 +2075,20 @@ v8-compile-cache@^2.0.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/v8-compile-cache/-/v8-compile-cache-2.3.0.tgz#2de19618c66dc247dcfb6f99338035d8245a2cee"
   integrity sha512-l8lCEmLcLYZh4nbunNZvQCJc5pv7+RCwa8q/LdUx8u7lsWvPDKmpodJAJNwkAhJC//dFY48KuIEmjtd4RViDrA==
+
+vue-router@4:
+  version "4.1.2"
+  resolved "https://registry.yarnpkg.com/vue-router/-/vue-router-4.1.2.tgz#ae08f63c9610afa6bff6743e8f128b7054d4c9f5"
+  integrity sha512-5BP1qXFncVRwgV/XnqzsKApdMjQPqWIpoUBdL1ynz8HyLxIX/UDAx7Ql2BjmA5CXT/p61JfZvkpiFWFpaqcfag==
+  dependencies:
+    "@vue/devtools-api" "^6.1.4"
+
+vue-sweetalert2@^5.0.5:
+  version "5.0.5"
+  resolved "https://registry.yarnpkg.com/vue-sweetalert2/-/vue-sweetalert2-5.0.5.tgz#298663884149c7675d514490d1389f0614d875c0"
+  integrity sha512-Q7+TjQxNwGruT2jfPaSKMz18HHWs81r4umEwlrrtOf/QL5Iwl1T+tUaNkcvKB7Rf9rYftubt7NnOMjfDMnDH3A==
+  dependencies:
+    sweetalert2 "11.x"
 
 vue@^3.2.37:
   version "3.2.37"

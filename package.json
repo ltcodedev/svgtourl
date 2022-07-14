@@ -1,12 +1,19 @@
 {
   "name": "svg-to-url",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Encode svg in url",
-  "main": "index.js",
   "repository": "https://github.com/webcolmeia/svgtourl",
+  "homepage": "https://webcolmeia.github.io/svgtourl/",
   "author": "Lucas Tiago <eulukasthyago@outlook.com>",
   "license": "MIT",
+  "browserslist": "> 0.5%, last 2 versions, not dead",
+  "scripts": {
+    "start": "rm -rf ./dist && yarn parcel index.html --public-url /",
+    "build": "rm -rf ./dist && yarn parcel build index.html --no-source-maps --public-url ./",
+    "gh-publish": "rm -rf ./dist && yarn parcel build index.html --no-source-maps --public-url ./ && yarn gh-pages -d ./dist"
+  },
   "devDependencies": {
+    "@parcel/config-default": "^2.6.2",
     "@parcel/transformer-sass": "^2.6.2",
     "@parcel/transformer-stylus": "^2.6.2",
     "@parcel/transformer-typescript-tsc": "^2.6.2",
@@ -17,7 +24,8 @@
     "typescript": ">=3.0.0"
   },
   "dependencies": {
-    "sweetalert2": "^11.4.22",
-    "vue": "^3.2.37"
+    "vue": "^3.2.37",
+    "vue-router": "4",
+    "vue-sweetalert2": "^5.0.5"
   }
 }

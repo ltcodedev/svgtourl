@@ -113,8 +113,8 @@
       </main>
 
       <footer class="footer">
-        <a href="https://github.com/yoksel/url-encoder/">Project on GitHub</a>
-        <a href="https://twitter.com/yoksel_en">@yoksel_en</a>
+        <a href="https://github.com/webcolmeia/svgtourl" target="_blank">Project on GitHub</a>
+        <a href="https://webcolmeia.com.br" target="_blank">Web Colmeia</a>
       </footer>
     </div>
 </template>

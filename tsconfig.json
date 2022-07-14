@@ -10,6 +10,9 @@
       "dom"
     ],
     "rootDir": "src",
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "types": [
+      "vue-sweetalert2"
+    ],
   }
 }
