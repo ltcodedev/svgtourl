@@ -10,7 +10,7 @@
   "scripts": {
     "start": "yarn parcel index.html --public-url /",
     "build": "rm -rf ./dist && yarn parcel build index.html --no-source-maps --public-url ./",
-    "gh-publish": "rm -rf ./dist && yarn parcel build index.html --no-source-maps --public-url ./ && yarn gh-pages -d ./"
+    "gh-publish": "yarn gh-pages -d ./"
   },
   "devDependencies": {
     "@parcel/config-default": "^2.6.2",
