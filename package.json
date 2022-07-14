@@ -7,15 +7,16 @@
   "author": "Lucas Tiago <eulukasthyago@outlook.com>",
   "license": "MIT",
   "devDependencies": {
+    "@parcel/transformer-sass": "^2.6.2",
+    "@parcel/transformer-stylus": "^2.6.2",
     "@parcel/transformer-typescript-tsc": "^2.6.2",
     "@parcel/transformer-vue": "^2.6.2",
+    "gh-pages": "^4.0.0",
     "parcel": "^2.6.2",
     "sass-loader": "^13.0.2",
     "typescript": ">=3.0.0"
   },
   "dependencies": {
-    "@parcel/transformer-sass": "^2.6.2",
-    "@parcel/transformer-stylus": "^2.6.2",
     "sweetalert2": "^11.4.22",
     "vue": "^3.2.37"
   }
