@@ -14,6 +14,8 @@
               value="single"
               name="quotes"
               class="options__input visuallyhidden"
+              v-model="externalQuotesValue"
+              @input="switchQuotes"
             />
             <span class="options__text">single</span>
           </label>
@@ -27,6 +29,8 @@
               name="quotes"
               class="options__input visuallyhidden"
               checked
+              v-model="externalQuotesValue"
+              @input="switchQuotes"
             />
             <span class="options__text">double</span>
           </label>
@@ -64,12 +68,12 @@
         <div class="container container--left container container--init">
           <h4>Insert your SVG:</h4>
           <button class="button-example" @click="showExample">Example</button>
-          <textarea name="init" id="init" spellcheck="false" v-model="valueCodes" @change="changeValueCode"></textarea>
+          <textarea name="init" id="init" spellcheck="false" v-model="initTextarea" @input="changeValueCode(), keyupChengeCode()"></textarea>
         </div>
 
         <div class="container container--right container container--result">
           <h4>Take encoded:</h4>
-          <textarea name="result" id="result" spellcheck="false"></textarea>
+          <textarea name="result" id="result" spellcheck="false" v-model="resultTextarea"></textarea>
         </div>
       </div>
 
@@ -80,7 +84,7 @@
             name="result-css"
             id="result-css"
             spellcheck="false"
-            v-model="resultTextarea"
+            v-model="resultCssTextarea"
           ></textarea>
         </div>
 
@@ -89,43 +93,27 @@
 
           <div class="contrast-buttons">
             Background:
-            <button
+            <button 
+              v-for="(button, index) in contrastBackground" :key="index"
               type="button"
-              class="contrast-button contrast-button--white"
-              data-color="white"
-              title="White"
+              :class="['contrast-button', `contrast-button--${button}`]"
+              :data-color="button"
+              :title="button"
+              @click="switchBackground"
             >
-              <span class="visuallyhidden">White</span>
-            </button>
-            <button
-              type="button"
-              class="contrast-button contrast-button--silver"
-              data-color="silver"
-              title="Silver"
-            >
-              <span class="visuallyhidden">Silver</span>
-            </button>
-            <button
-              type="button"
-              class="contrast-button contrast-button--black"
-              data-color="black"
-              title="Black"
-            >
-              <span class="visuallyhidden">Black</span>
+              <span class="visuallyhidden">{{ button }}</span>
             </button>
           </div>
 
-          <div class="demo-wrapper">
-            <div id="demo" class="demo"></div>
+          <div class="demo-wrapper" :style="{backgroundColor: backgroundColor}">
+            <div id="demo" class="demo" :style="resultDemo"></div>
           </div>
         </div>
       </div>
     </main>
 
     <footer class="footer">
-      <a href="https://github.com/webcolmeia/svgtourl" target="_blank"
-        >Project on GitHub</a
-      >
+      <a href="https://github.com/webcolmeia/svgtourl" target="_blank">Project on GitHub</a>
       <a href="https://webcolmeia.com.br" target="_blank">Web Colmeia</a>
     </footer>
   </div>
@@ -139,27 +127,51 @@ export default {
       applicationName: "URL-encoder for SVG",
       initTextarea: '',
       resultTextarea: '',
+      resultCssTextarea: '',
+      resultDemo: '',
+      quotes: {},
+      externalQuotesValue: 'double',
+      contrastBackground: ['white', 'silver', 'black'],
+      backgroundColor: "",
+      contrastButtonCurrent: null,
     };
   },
 
   methods: {
+
+    // Textarea Actions
+    //----------------------------------------
     getResults(){
-      if (this.initTextarea != '') {
+      if (!this.initTextarea) {
         return;
       }
 
-      var namespaced = addNameSpace(initTextarea.value);
-      var escaped = encodeSVG(namespaced);
+      let namespaced = this.addNameSpace(this.initTextarea);
+      let escaped = this.encodeSVG(namespaced);
       this.resultTextarea = escaped;
-      var resultCss = `background-image: url(${quotes.level1}data:image/svg+xml,${escaped}${quotes.level1});`;
+      let resultCss = `background-image: url(${this.quotes.level1}data:image/svg+xml,${escaped}${this.quotes.level1});`;
       this.resultCssTextarea = resultCss;
-      resultDemo.setAttribute("style", resultCss);
+      this.resultDemo = resultCss;
+    },
+
+    // Namespace
+    //----------------------------------------
+
+    addNameSpace(data) {
+      if (data.indexOf("http://www.w3.org/2000/svg") < 0) {
+        data = data.replace(
+          /<svg/g,
+          `<svg xmlns=${this.quotes.level2}http://www.w3.org/2000/svg${this.quotes.level2}`
+        );
+      }
+
+      return data;
     },
 
     encodeSVG(data) {
       // Use single quotes instead of double to avoid encoding.
       const symbols = /[\r\n%#()<>?\[\\\]^`{|}]/g;
-      if (externalQuotesValue === "double") {
+      if (this.externalQuotesValue === "double") {
         data = data.replace(/"/g, "'");
       } else {
         data = data.replace(/'/g, '"');
@@ -173,14 +185,7 @@ export default {
 
     // Set example
     showExample() {
-      this.initTextarea = `<svg>
-        <circle r="50" cx="50" cy="50" fill="tomato"/>
-        <circle r="41" cx="47" cy="50" fill="orange"/>
-        <circle r="33" cx="48" cy="53" fill="gold"/>
-        <circle r="25" cx="49" cy="51" fill="yellowgreen"/>
-        <circle r="17" cx="52" cy="50" fill="lightseagreen"/>
-        <circle r="9" cx="55" cy="48" fill="teal"/>
-      </svg>`;
+      this.initTextarea = `<svg><circle r="50" cx="50" cy="50" fill="tomato"/><circle r="41" cx="47" cy="50" fill="orange"/><circle r="33" cx="48" cy="53" fill="gold"/><circle r="25" cx="49" cy="51" fill="yellowgreen"/><circle r="17" cx="52" cy="50" fill="lightseagreen"/><circle r="9" cx="55" cy="48" fill="teal"/></svg>`;
       this.getResults();
     },
 
@@ -190,40 +195,59 @@ export default {
 
     keyupChengeCode(){
       this.getResults();
+    },
+
+    // Get quotes for levels
+    //----------------------------------------
+
+    getQuotes() {
+      const double = `"`;
+      const single = `'`;
+
+      return {
+        level1: this.externalQuotesValue === "double" ? double : single,
+        level2: this.externalQuotesValue === "double" ? single : double
+      };
+    },
+
+    // Demo Background Switch
+    //----------------------------------------
+
+    contrastButtonsSetCurrent(button) {
+      const classCurrent = "contrast-button--current";
+
+      if (this.contrastButtonCurrent) {
+        this.contrastButtonCurrent.classList.remove(classCurrent);
+      }
+
+      this.backgroundColor = button.dataset.color;
+      this.contrastButtonCurrent = button;
+      button.classList.add(classCurrent);
+    },
+
+    switchBackground(e){
+      if (!this.backgroundColor) {
+        this.contrastButtonsSetCurrent(e.target);
+      }
+      this.contrastButtonsSetCurrent(e.target);
+    },
+
+    // Switch quotes
+    //----------------------------------------
+
+    switchQuotes(){
+      this.quotes = this.getQuotes();
+      this.getResults();
     }
   },
 
+  created(){
+    this.quotes = this.getQuotes();
+  },
+
   mounted() {
-    var doc = document;
-
-    var initTextarea = doc.querySelector("#init");
-    var resultTextarea = doc.querySelector("#result");
-
-    var resultCssTextarea = doc.querySelector("#result-css");
-    var resultDemo = doc.querySelector("#demo");
-    var demoWrapper = doc.querySelector(".demo-wrapper");
-    var contrastButtons = doc.querySelectorAll(".contrast-button");
-    var contrastButtonCurrent = null;
-    var backgroundColor = "";
-
-    var expanders = doc.querySelectorAll(".expander");
+    var expanders = document.querySelectorAll(".expander");
     var expandedClass = "expanded";
-    var demoContrastClass = "demo-contrast-on";
-
-    const quotesInputs = document.querySelectorAll(".options__input");
-    let externalQuotesValue = document.querySelector(
-      ".options__input:checked"
-    ).value;
-    let quotes = getQuotes();
-
-    //const buttonExample = document.querySelector(".button-example");
-
-    // Textarea Actions
-    //----------------------------------------
-
-    function getResults() {
-      
-    }
 
     // Tabs Actions
     //----------------------------------------
@@ -239,79 +263,8 @@ export default {
       };
     }
 
-    // Switch quotes
-    //----------------------------------------
-
-    quotesInputs.forEach((input) => {
-      input.addEventListener("input", function () {
-        externalQuotesValue = this.value;
-        quotes = getQuotes();
-        getResults();
-      });
-    });
-
-    // Demo Background Switch
-    //----------------------------------------
-
-    function contrastButtonsSetCurrent(button) {
-      const classCurrent = "contrast-button--current";
-
-      if (contrastButtonCurrent) {
-        contrastButtonCurrent.classList.remove(classCurrent);
-      }
-
-      backgroundColor = button.dataset.color;
-      contrastButtonCurrent = button;
-      button.classList.add(classCurrent);
-    }
-
-    contrastButtons.forEach((button) => {
-      if (!backgroundColor) {
-        contrastButtonsSetCurrent(button);
-      }
-
-      button.addEventListener("click", function () {
-        contrastButtonsSetCurrent(this);
-        demoWrapper.style.background = backgroundColor;
-      });
-    });
-
-    // Namespace
-    //----------------------------------------
-
-    function addNameSpace(data) {
-      if (data.indexOf("http://www.w3.org/2000/svg") < 0) {
-        data = data.replace(
-          /<svg/g,
-          `<svg xmlns=${quotes.level2}http://www.w3.org/2000/svg${quotes.level2}`
-        );
-      }
-
-      return data;
-    }
-
-    // Encoding
-    //----------------------------------------
-
-    // Get quotes for levels
-    //----------------------------------------
-
-    function getQuotes() {
-      const double = `"`;
-      const single = `'`;
-
-      return {
-        level1: externalQuotesValue === "double" ? double : single,
-        level2: externalQuotesValue === "double" ? single : double
-      };
-    }
-
     // Common
     //----------------------------------------
-
-    function out(data) {
-      console.log(data);
-    }
   }
 };
 </script>
