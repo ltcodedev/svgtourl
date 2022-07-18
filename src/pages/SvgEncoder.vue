@@ -120,6 +120,10 @@
 </template>
 
 <script>
+import {EditorView, keymap} from "@codemirror/view";
+import {defaultKeymap} from "@codemirror/commands";
+import {html} from "@codemirror/lang-html";
+
 export default {
   name: "SvgEncoder",
   data() {
@@ -265,6 +269,12 @@ export default {
 
     // Common
     //----------------------------------------
+
+    let myView = new EditorView({
+      doc: "hello",
+      extensions: [keymap.of(defaultKeymap), html()],
+      parent: document.querySelector(".container--init")
+    })
   }
 };
 </script>

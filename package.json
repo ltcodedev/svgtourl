@@ -8,7 +8,7 @@
   "license": "MIT",
   "browserslist": "> 0.5%, last 2 versions, not dead",
   "scripts": {
-    "start": "rm -rf ./dist && yarn parcel index.html --public-url /",
+    "start": "rm -rf ./dist && yarn parcel index.html -p 3000",
     "build": "rm -rf ./dist && yarn parcel build index.html --no-source-maps --public-url ./",
     "gh-publish": "rm -rf ./dist && yarn parcel build index.html --no-source-maps --public-url ./ && yarn gh-pages -d ./dist"
   },
@@ -18,14 +18,32 @@
     "@parcel/transformer-stylus": "^2.6.2",
     "@parcel/transformer-typescript-tsc": "^2.6.2",
     "@parcel/transformer-vue": "^2.6.2",
+    "@parcel/validator-typescript": "^2.6.2",
+    "buffer": "^6.0.3",
     "gh-pages": "^4.0.0",
     "parcel": "^2.6.2",
+    "parcel-resolver-ts-base-url": "^1.1.5",
+    "parcel-resolver-tspaths": "^0.0.9",
+    "process": "^0.11.10",
     "sass-loader": "^13.0.2",
     "typescript": ">=3.0.0"
   },
   "dependencies": {
+    "@codemirror/lang-html": "^6.1.0",
+    "@codemirror/theme-one-dark": "^6.0.0",
+    "codemirror": "^6.0.1",
+    "primeicons": "^5.0.0",
+    "primevue": "^3.15.0",
     "vue": "^3.2.37",
+    "vue-codemirror": "^6.0.0",
     "vue-router": "4",
     "vue-sweetalert2": "^5.0.5"
+  },
+  "alias": {
+    "_components": "./src/components",
+    "_layout": "./src/layout",
+    "_pages": "./src/pages",
+    "_assets": "./src/assets",
+    "_theme": "./src/assets/theme.json"
   }
 }
