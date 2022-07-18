@@ -273,7 +273,10 @@ export default {
     let myView = new EditorView({
       doc: "hello",
       extensions: [keymap.of(defaultKeymap), html()],
-      parent: document.querySelector(".container--init")
+      parent: document.querySelector(".container--init"),
+      lineNumbers: true,
+      gutter: true,
+      lineWrapping: true,
     })
   }
 };
