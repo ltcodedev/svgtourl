@@ -142,9 +142,6 @@ export default {
   },
 
   methods: {
-
-    // Textarea Actions
-    //----------------------------------------
     getResults(){
       if (!this.initTextarea) {
         return;
@@ -158,9 +155,6 @@ export default {
       this.resultDemo = resultCss;
     },
 
-    // Namespace
-    //----------------------------------------
-
     addNameSpace(data) {
       if (data.indexOf("http://www.w3.org/2000/svg") < 0) {
         data = data.replace(
@@ -173,7 +167,6 @@ export default {
     },
 
     encodeSVG(data) {
-      // Use single quotes instead of double to avoid encoding.
       const symbols = /[\r\n%#()<>?\[\\\]^`{|}]/g;
       if (this.externalQuotesValue === "double") {
         data = data.replace(/"/g, "'");
