@@ -3,3 +3,4 @@ dist
 .parcel-cache
 yarn.lock
 yarn-error
+.next
