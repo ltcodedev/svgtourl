@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 const SVGToUrl = () => {
     const [applicationName] = useState("SVGToUrl");
@@ -6,24 +6,62 @@ const SVGToUrl = () => {
     const [resultDemo, setResultDemo] = useState("");
     const [initTextarea, setInitTextarea] = useState("");
     const [resultTextarea, setResultTextarea] = useState("");
-    const [quotes, setQuotes] = useState({ level1: "", level2: "" });
+    const [quotes, setQuotes] = useState({ level1: '"', level2: "'" });
     const [externalQuotesValue, setExternalQuotesValue] = useState("double");
     const [resultCssTextarea, setResultCssTextarea] = useState("");
+    const [contrastButtonCurrent, setContrastButtonCurrent] = useState(null);
+    const [backgroundColor, setBackgroundColor] = useState("white");
+    const [urlResult, setUrlResult] = useState("");
 
-    const switchBackground = () => {};
+    const demoRef = useRef(null);
+
+    const contrastButtonsSetCurrent = (button) => {
+    const classCurrent = "contrast-button--current";
+
+    if (contrastButtonCurrent) {
+        contrastButtonCurrent.classList.remove(classCurrent);
+    }
+
+    setBackgroundColor(button.dataset.color);
+    button.classList.add(classCurrent);
+    setContrastButtonCurrent(() => button);
+    }
+
+    const switchBackground = (event) => {
+        contrastButtonsSetCurrent(event.target);
+    };
 
     const getResults = () => {
-        if (!initTextarea) {
-            return;
-        }
-
         let namespaced = addNameSpace(initTextarea);
         let escaped = encodeSVG(namespaced);
         setResultTextarea(escaped);
         let resultCss = `background-image: url(${quotes.level1}data:image/svg+xml,${escaped}${quotes.level1});`;
+        setUrlResult(`data:image/svg+xml,${escaped}`);
         setResultCssTextarea(resultCss);
         setResultDemo(resultCss);
     };
+
+    useEffect(() => {
+        getResults();
+    }, [initTextarea]);
+
+    useEffect(() => {
+        getQuotes();
+    }, [externalQuotesValue]);
+
+    useEffect(() => {
+        getResults();
+    }, [quotes]);
+
+    useEffect(() => {
+        if(demoRef.current){
+            demoRef.current.setAttribute("style", resultDemo);
+        }
+    }, [resultDemo]);
+
+    // useEffect(() => {
+    //     getResults();
+    // }, [resultTextarea]);
 
     const addNameSpace = (data) => {
         if (data.indexOf("http://www.w3.org/2000/svg") < 0) {
@@ -56,18 +94,18 @@ const SVGToUrl = () => {
     const getQuotes = () => {
         const double = `"`;
         const single = `'`;
-
-        return {
-            level1: externalQuotesValue === "double" ? double : single,
-            level2: externalQuotesValue === "double" ? single : double,
-        };
+        setQuotes(() => {
+            return {
+                level1: externalQuotesValue === "double" ? double : single,
+                level2: externalQuotesValue === "double" ? single : double,
+            }
+        });
     };
 
     // Set example
+
     const showExample = () => {
-        setInitTextarea(
-            `<svg><circle r="50" cx="50" cy="50" fill="tomato"/><circle r="41" cx="47" cy="50" fill="orange"/><circle r="33" cx="48" cy="53" fill="gold"/><circle r="25" cx="49" cy="51" fill="yellowgreen"/><circle r="17" cx="52" cy="50" fill="lightseagreen"/><circle r="9" cx="55" cy="48" fill="teal"/></svg>`
-        );
+        setInitTextarea(() => `<svg><circle r="50" cx="50" cy="50" fill="tomato"/><circle r="41" cx="47" cy="50" fill="orange"/><circle r="33" cx="48" cy="53" fill="gold"/><circle r="25" cx="49" cy="51" fill="yellowgreen"/><circle r="17" cx="52" cy="50" fill="lightseagreen"/><circle r="9" cx="55" cy="48" fill="teal"/></svg>`);
         getResults();
     };
 
@@ -79,21 +117,25 @@ const SVGToUrl = () => {
         getResults();
     };
 
-    var expanders = document.querySelectorAll(".expander");
-    var expandedClass = "expanded";
+    // Switch quotes
+    //----------------------------------------
+
+    const switchQuotes = (value) => {
+        setExternalQuotesValue(() => value); 
+    }
 
     // Tabs Actions
     //----------------------------------------
 
-    for (var i = 0; i < expanders.length; i++) {
-      var expander = expanders[i];
+    let expandedClass = "expanded";
 
-      expander.onclick = function () {
-        var parent = this.parentNode;
-        var expanded = parent.querySelector("." + expandedClass);
-        expanded.classList.toggle("hidden");
-        this.classList.toggle("opened");
-      };
+    function toggleExpanders(e){
+        if(e.target.localName === 'dt'){
+            let parent = e.target.parentNode;
+            let expanded = parent.querySelector("." + expandedClass);
+            expanded.classList.toggle("hidden");
+            e.target.classList.toggle("opened");
+        }
     }
 
     // Common
@@ -108,10 +150,6 @@ const SVGToUrl = () => {
 //       lineWrapping: true,
 //     })
 //   }
-
-    useEffect(() => {
-        setQuotes(() => getQuotes());
-    }, []);
 
     return (
         <>
@@ -130,7 +168,10 @@ const SVGToUrl = () => {
                                     value="single"
                                     name="quotes"
                                     className="options__input visuallyhidden"
-                                    v-model="externalQuotesValue"
+                                    checked={externalQuotesValue === "single"}
+                                    onChange={(event) => {
+                                        switchQuotes(event.target.value);
+                                    }}
                                 />
                                 <span className="options__text">single</span>
                             </label>
@@ -141,15 +182,17 @@ const SVGToUrl = () => {
                                     value="double"
                                     name="quotes"
                                     className="options__input visuallyhidden"
-                                    checked
-                                    v-model="externalQuotesValue"
+                                    checked={externalQuotesValue === "double"}
+                                    onChange={(event) => {
+                                        switchQuotes(event.target.value);
+                                    }}
                                 />
                                 <span className="options__text">double</span>
                             </label>
                         </div>
 
                         <dl className="about">
-                            <dt className="expander">About tool</dt>
+                            <dt onClick={toggleExpanders} className="expander">About tool</dt>
                             <dd className="expanded hidden">
                                 <p>
                                     We can use SVG in CSS via data URI, but
@@ -188,12 +231,17 @@ const SVGToUrl = () => {
                     <div className="containers">
                         <div className="container container--left container container--init">
                             <h4>Insert your SVG:</h4>
-                            <button className="button-example">Example</button>
+                            <button className="button-example" onClick={showExample}>Example</button>
                             <textarea
                                 name="init"
                                 id="init"
-                                spellcheck="false"
-                                v-model="initTextarea"
+                                spellCheck="false"
+                                value={initTextarea}
+                                onChange={event => {
+                                    let { value } = event.target
+                                    setInitTextarea(() => value);
+                                }}
+                                onKeyUp={keyupChengeCode}
                             ></textarea>
                         </div>
 
@@ -202,8 +250,13 @@ const SVGToUrl = () => {
                             <textarea
                                 name="result"
                                 id="result"
-                                spellcheck="false"
-                                v-model="resultTextarea"
+                                spellCheck="false"
+                                value={resultTextarea}
+                                onChange={event => {
+                                    let { value } = event.target
+                                    setResultTextarea(() => value);
+                                }}
+                                disabled
                             ></textarea>
                         </div>
                     </div>
@@ -214,8 +267,9 @@ const SVGToUrl = () => {
                             <textarea
                                 name="result-css"
                                 id="result-css"
-                                spellcheck="false"
-                                v-model="resultCssTextarea"
+                                spellCheck="false"
+                                value={resultCssTextarea}
+                                disabled
                             ></textarea>
                         </div>
 
@@ -229,10 +283,10 @@ const SVGToUrl = () => {
                                         <button
                                             key={index}
                                             type="button"
-                                            className="['contrast-button', `contrast-button--${button}`]"
-                                            data-color="button"
+                                            className={`contrast-button contrast-button--${button}`}
+                                            data-color={button}
                                             title="button"
-                                            //onClick={switchBackground()}
+                                            onClick={switchBackground}
                                         >
                                             <span className="visuallyhidden">
                                                 {button}
@@ -244,14 +298,27 @@ const SVGToUrl = () => {
 
                             <div
                                 className="demo-wrapper"
-                                //style={{ backgroundColor: backgroundColor }}
+                                style={{ backgroundColor: backgroundColor }}
                             >
                                 <div
                                     id="demo"
                                     className="demo"
-                                    //style={resultDemo}
+                                    ref={demoRef}
                                 ></div>
                             </div>
+                        </div>
+                    </div>
+
+                    <div className="containers">
+                        <div className="container container--left container container--result-url">
+                            <h4>Ready for URL:</h4>
+                            <textarea
+                                name="result-url"
+                                id="result-url"
+                                spellCheck="false"
+                                value={urlResult}
+                                disabled
+                            ></textarea>
                         </div>
                     </div>
                 </main>
