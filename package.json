@@ -9,6 +9,8 @@
     "static": "next build && next export && touch ./out/.nojekyll"
   },
   "dependencies": {
+    "i18next": "^21.8.14",
+    "i18next-browser-languagedetector": "^6.1.4",
     "next": "latest",
     "primeicons": "^5.0.0",
     "primereact": "^8.3.0",

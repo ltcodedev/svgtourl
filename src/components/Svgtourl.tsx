@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
+import { i18n } from "../translate/i18next";
 
 const SVGToUrl = () => {
-    const [applicationName] = useState("SVGToUrl");
+    const [applicationName] = useState(i18n.t("titles.appName"));
     const [contrastBackground] = useState(["white", "silver", "black"]);
     const [resultDemo, setResultDemo] = useState("");
     const [initTextarea, setInitTextarea] = useState("");
