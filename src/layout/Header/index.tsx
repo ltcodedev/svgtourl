@@ -24,9 +24,7 @@ const Header = () => {
         <div className="header_page-container">
           <div className="logo_area">
             <Link href="/">
-              <a>
                 <img src={logo} width="150" alt="Web Colmeia" />
-              </a>
             </Link>
           </div>
           <div className="header_page-right">
